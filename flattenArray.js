@@ -30,7 +30,7 @@ function flatten(arr, shallow) {
 }
 
 
-// Official implementation
+// Official underscore(_) implementation
 
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 
