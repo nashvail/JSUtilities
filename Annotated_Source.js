@@ -1,37 +1,4 @@
-let arr = [1, [2], [3, [[4]]]];
-
-function flatten(arr, shallow) {
-
-	var result = [];
-
-	recFlatten(arr, result, 0, 1);
-
-	function recFlatten(value, soFar, currentDepth, maxDepth) {
-		if(shallow) { // For flattening to a specific level
-			if(currentDepth <= maxDepth) {
-				if(Array.isArray(value)) {
-					value.forEach( value => {recFlatten(value, soFar, currentDepth + 1, maxDepth)});
-				} else {
-					soFar.push(value);
-				}
-			} else {
-				soFar.push(value);
-			}
-		} else { // For flattening all the way through
-			if(Array.isArray(value)) {
-				value.forEach( value => {recFlatten(value, soFar)});
-			} else {
-				soFar.push(value);
-			}
-		}
-	}
-
-	return result;
-}
-
-
-// Official underscore(_) implementation
-
+// Flattening 
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 
 var nativeIsArray = Array.isArray,
@@ -93,6 +60,3 @@ var __flatten = function(input, shallow, strict, output) {
   }
   return output;
 };
-
-console.log(flatten(arr,  true)); 
-console.log(_flatten(arr, true));
