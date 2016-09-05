@@ -12,20 +12,22 @@
 module.exports = ß = {};
 
 /* 
-* Flattens a nested array (the nesting can be to any depth). 
-* If you pass shallow, the array will only be flattened a single level.
-*/
+ * Flattens a nested array (the nesting can be to any depth). 
+ * If you pass shallow, the array will only be flattened a single level.
+ */
 ß.flatten = function flatten(arr, shallow) {
-	
+
 	var result = [];
 
 	recFlatten(arr, result, 0, 1);
 
 	function recFlatten(value, soFar, currentDepth, maxDepth) {
-		if(shallow) { // For flattening to a specific level
-			if(currentDepth <= maxDepth) {
-				if(Array.isArray(value)) {
-					value.forEach( value => {recFlatten(value, soFar, currentDepth + 1, maxDepth)});
+		if (shallow) { // For flattening to a specific level
+			if (currentDepth <= maxDepth) {
+				if (Array.isArray(value)) {
+					value.forEach(value => {
+						recFlatten(value, soFar, currentDepth + 1, maxDepth)
+					});
 				} else {
 					soFar.push(value);
 				}
@@ -33,8 +35,10 @@ module.exports = ß = {};
 				soFar.push(value);
 			}
 		} else { // For flattening all the way through
-			if(Array.isArray(value)) {
-				value.forEach( value => {recFlatten(value, soFar)});
+			if (Array.isArray(value)) {
+				value.forEach(value => {
+					recFlatten(value, soFar)
+				});
 			} else {
 				soFar.push(value);
 			}
@@ -45,11 +49,11 @@ module.exports = ß = {};
 };
 
 /*
-* Returns a copy of the array with all instances of the values(arguments passed after array) removed.
-*/
+ * Returns a copy of the array with all instances of the values(arguments passed after array) removed.
+ */
 ß.without = function without(array) {
 	let toRemove = Array.from(arguments).slice(1);
-	return array.filter( elem => !~toRemove.indexOf(elem));
+	return array.filter(elem => !~toRemove.indexOf(elem));
 };
 
 /*
@@ -89,8 +93,8 @@ module.exports = ß = {};
 ß.flattenObject = function flattenObject(toFlatten) {
 	var result = {};
 
-	if(typeof toFlatten === 'object' && !Array.isArray(toFlatten)) {
-		Object.keys(toFlatten).forEach( key => {
+	if (typeof toFlatten === 'object' && !Array.isArray(toFlatten)) {
+		Object.keys(toFlatten).forEach(key => {
 			step('', key, toFlatten[key]);
 		});
 	} else {
@@ -98,9 +102,9 @@ module.exports = ß = {};
 	}
 
 	function step(scope, key, value) {
-		if(typeof value === 'object' && !Array.isArray(value)) {
+		if (typeof value === 'object' && !Array.isArray(value)) {
 			let newScope = scope === '' ? `${key}` : `${scope}.${key}`;
-			Object.keys(value).forEach( currentKey => {
+			Object.keys(value).forEach(currentKey => {
 				step(newScope, currentKey, value[currentKey]);
 			});
 		} else { // value is of a primitive type
@@ -149,11 +153,11 @@ module.exports = ß = {};
 var unfFlattenObject = function unFlattenObject(toUnflatten) {
 	let result = {};
 
-	if(typeof toUnflatten === 'object' && !Array.isArray(toUnflatten)) {
-		Object.keys(toUnflatten).forEach( key => {
-			if(isProp(key)) {
+	if (typeof toUnflatten === 'object' && !Array.isArray(toUnflatten)) {
+		Object.keys(toUnflatten).forEach(key => {
+			if (isProp(key)) {
 				result[key] = toUnflatten[key];
-			} else if(isPropWithScope(key)) {
+			} else if (isPropWithScope(key)) {
 				let keys = key.split('.'),
 					terminalKey = keys[keys.length - 1],
 					value = toUnflatten[key];
@@ -164,13 +168,13 @@ var unfFlattenObject = function unFlattenObject(toUnflatten) {
 	}
 
 	function addProp(obj, keys, currentKeyIndex, terminalKey, value) {
-		if(keys[currentKeyIndex] === terminalKey) {
+		if (keys[currentKeyIndex] === terminalKey) {
 			obj[terminalKey] = value;
 			return;
 		} else {
-			if(!obj.hasOwnProperty(keys[currentKeyIndex])) 
+			if (!obj.hasOwnProperty(keys[currentKeyIndex]))
 				obj[keys[currentKeyIndex]] = {};
-			
+
 			addProp(obj[keys[currentKeyIndex]], keys, currentKeyIndex + 1, terminalKey, value);
 		}
 	}
@@ -181,10 +185,9 @@ var unfFlattenObject = function unFlattenObject(toUnflatten) {
 	}
 
 	function isPropWithScope(key) {
-		return key.split('.').length >  1;
+		return key.split('.').length > 1;
 	}
 
 	return result;
 
 };
-
