@@ -3,13 +3,25 @@
 // ------------------------------------------------------------
 // Finished Features - [_](To Begin) [-](In Progress) [x](Done)
 // ------------------------------------------------------------
+// [-] differnce
 // [-] flatten (Array)
 // [-] flattenObject
+// [_] invert
 // [-] unFlattenObject
 // [-] without
-// [-] differnce
 
 module.exports = ß = {};
+
+/*
+* Similar to without except returns the value from array that are not present in 
+* any of the other arrays.
+*/
+ß.difference = function difference(array) {
+	if(arguments.length <= 1) return array; else {
+		let allValues = ß.flatten(Array.from(arguments).slice(1));
+		return array.filter( elem => !~allValues.indexOf(elem));
+	}
+};
 
 /* 
  * Flattens a nested array (the nesting can be to any depth). 
@@ -47,26 +59,6 @@ module.exports = ß = {};
 
 	return result;
 };
-
-/*
- * Returns a copy of the array with all instances of the values(arguments passed after array) removed.
- */
-ß.without = function without(array) {
-	let toRemove = Array.from(arguments).slice(1);
-	return array.filter(elem => !~toRemove.indexOf(elem));
-};
-
-/*
-* Similar to without except returns the value from array that are not present in 
-* any of the other arrays.
-*/
-ß.difference = function difference(array) {
-	if(arguments.length <= 1) return array; else {
-		let allValues = ß.flatten(Array.from(arguments).slice(1));
-		return array.filter( elem => !~allValues.indexOf(elem));
-	}
-};
-
 
 /*
 * Flatten nested Objects, e.g
@@ -126,6 +118,22 @@ module.exports = ß = {};
 	}
 
 	return result;
+};
+
+/*
+* Inverts an object - where in all the keys become values and all the values become keys.
+* All object values should be unique and string serializable.
+*/
+ß.invert = function invert(obj) {
+	let keys = Object.keys(obj);
+	let result = {};
+
+	keys.forEach( key => {
+		result[obj[key]] = key;
+	});
+
+	return result;
+
 };
 
 /*
@@ -202,4 +210,12 @@ let unfFlattenObject = function unFlattenObject(toUnflatten) {
 
 	return result;
 
+};
+
+/*
+ * Returns a copy of the array with all instances of the values(arguments passed after array) removed.
+ */
+ß.without = function without(array) {
+	let toRemove = Array.from(arguments).slice(1);
+	return array.filter(elem => !~toRemove.indexOf(elem));
 };
