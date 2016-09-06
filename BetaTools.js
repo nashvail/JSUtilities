@@ -7,7 +7,7 @@
 // [-] flattenObject
 // [-] unFlattenObject
 // [-] without
-// [_] differnce
+// [-] differnce
 
 module.exports = ß = {};
 
@@ -17,7 +17,7 @@ module.exports = ß = {};
  */
 ß.flatten = function flatten(arr, shallow) {
 
-	var result = [];
+	let result = [];
 
 	recFlatten(arr, result, 0, 1);
 
@@ -57,6 +57,18 @@ module.exports = ß = {};
 };
 
 /*
+* Similar to without except returns the value from array that are not present in 
+* any of the other arrays.
+*/
+ß.difference = function difference(array) {
+	if(arguments.length <= 1) return array; else {
+		let allValues = ß.flatten(Array.from(arguments).slice(1));
+		return array.filter( elem => !~allValues.indexOf(elem));
+	}
+};
+
+
+/*
 * Flatten nested Objects, e.g
 * Input: 
 * let test = {
@@ -91,7 +103,7 @@ module.exports = ß = {};
 	}
 */
 ß.flattenObject = function flattenObject(toFlatten) {
-	var result = {};
+	let result = {};
 
 	if (typeof toFlatten === 'object' && !Array.isArray(toFlatten)) {
 		Object.keys(toFlatten).forEach(key => {
@@ -150,7 +162,7 @@ module.exports = ß = {};
 		}
 	};
 */
-var unfFlattenObject = function unFlattenObject(toUnflatten) {
+let unfFlattenObject = function unFlattenObject(toUnflatten) {
 	let result = {};
 
 	if (typeof toUnflatten === 'object' && !Array.isArray(toUnflatten)) {
