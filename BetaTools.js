@@ -6,7 +6,7 @@
 // [-] differnce
 // [-] flatten (Array)
 // [-] flattenObject
-// [_] invert
+// [-] invert
 // [-] unFlattenObject
 // [-] without
 
