@@ -31,28 +31,28 @@ module.exports = ß = {};
 
 	let result = [];
 
-	recFlatten(arr, result, 0, 1);
+	recFlatten(arr, 0, 1);
 
-	function recFlatten(value, soFar, currentDepth, maxDepth) {
+	function recFlatten(value, currentDepth, maxDepth) {
 		if (shallow) { // For flattening to a specific level
 			if (currentDepth <= maxDepth) {
 				if (Array.isArray(value)) {
 					value.forEach(value => {
-						recFlatten(value, soFar, currentDepth + 1, maxDepth)
+						recFlatten(value, currentDepth + 1, maxDepth)
 					});
 				} else {
-					soFar.push(value);
+					result.push(value);
 				}
 			} else {
-				soFar.push(value);
+				result.push(value);
 			}
 		} else { // For flattening all the way through
 			if (Array.isArray(value)) {
 				value.forEach(value => {
-					recFlatten(value, soFar)
+					recFlatten(value, result)
 				});
 			} else {
-				soFar.push(value);
+				result.push(value);
 			}
 		}
 	}
@@ -118,6 +118,12 @@ module.exports = ß = {};
 	}
 
 	return result;
+};
+
+// This is flawed
+ß.intersection = function intersection(array) {
+	let toIntersectWith = ß.flatten(Array.from(arguments).slice(1));
+	return array.filter( elem => ~toIntersectWith.indexOf(elem));
 };
 
 /*
@@ -216,6 +222,9 @@ let unfFlattenObject = function unFlattenObject(toUnflatten) {
  * Returns a copy of the array with all instances of the values(arguments passed after array) removed.
  */
 ß.without = function without(array) {
-	let toRemove = Array.from(arguments).slice(1);
-	return array.filter(elem => !~toRemove.indexOf(elem));
+	// Using differnce function
+	return ß.difference(array, Array.from(arguments).slice(1));
+	// Without using ß.difference as a helper	
+	// let toRemove = Array.from(arguments).slice(1);
+	// return array.filter(elem => !~toRemove.indexOf(elem));
 };
