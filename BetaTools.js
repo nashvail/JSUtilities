@@ -9,6 +9,7 @@
 // [-] invert
 // [-] unFlattenObject
 // [-] without
+// [_] intersection
 
 module.exports = ß = {};
 
@@ -99,21 +100,22 @@ module.exports = ß = {};
 
 	if (typeof toFlatten === 'object' && !Array.isArray(toFlatten)) {
 		Object.keys(toFlatten).forEach(key => {
-			step('', key, toFlatten[key]);
+			recFlatten('', key, toFlatten[key]);
 		});
 	} else {
 		console.err('Passed in parameter is not an object');
 	}
 
-	function step(scope, key, value) {
-		if (typeof value === 'object' && !Array.isArray(value)) {
-			let newScope = scope === '' ? `${key}` : `${scope}.${key}`;
-			Object.keys(value).forEach(currentKey => {
-				step(newScope, currentKey, value[currentKey]);
+	function recFlatten(scope, key, value) {
+		var newScope = scope === '' ? key : `${scope}.${key}`;
+
+		if(typeof value === 'object' && !Array.isArray(value)) {
+			Object.keys(value).forEach( currentKey => {
+				recFlatten(newScope, currentKey, value[currentKey]);
 			});
-		} else { // value is of a primitive type
-			let prefix = scope === '' ? scope : `${scope}.`;
-			result[`${prefix}${key}`] = value;
+		} else { 
+			result[newScope] = value;
+			return;
 		}
 	}
 
