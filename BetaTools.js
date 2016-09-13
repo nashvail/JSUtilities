@@ -7,9 +7,10 @@
 // [-] flatten (Array)
 // [-] flattenObject
 // [-] invert
-// [-] unFlattenObject
+// [-] isArray
+// [-] unflattenObject
 // [-] without
-// [_] intersection
+// [_] intersection <<<<<<
 
 module.exports = ß = {};
 
@@ -145,6 +146,13 @@ module.exports = ß = {};
 };
 
 /*
+* Returns true if passed in object(a) is an array, false otherwise
+*/
+ß.isArray = Array.isArray || function(a) {
+	return Object.prototype.toString.call(a) === '[object Array]';
+};
+
+/*
 * Unflattens and returns an object to intial state as flattened by flattenObject function.
 * e.g.
 * Input: 
@@ -178,46 +186,28 @@ module.exports = ß = {};
 		}
 	};
 */
-let unfFlattenObject = function unFlattenObject(toUnflatten) {
-	let result = {};
+ß.unflattenObject = function unFlattenObject(toUnflatten) {
+	var result = {};
 
-	if (typeof toUnflatten === 'object' && !Array.isArray(toUnflatten)) {
-		Object.keys(toUnflatten).forEach(key => {
-			if (isProp(key)) {
-				result[key] = toUnflatten[key];
-			} else if (isPropWithScope(key)) {
-				let keys = key.split('.'),
-					terminalKey = keys[keys.length - 1],
-					value = toUnflatten[key];
-
-				addProp(result, keys, 0, terminalKey, value);
-			}
+	if(Object.prototype.toString.call(toUnflatten) === '[object Object]') {
+		Object.keys(toUnflatten).forEach( key => {
+			addPropToResult(result, key, toUnflatten[key]);
 		});
+	} else {
+		return toUnflatten;
 	}
 
-	function addProp(obj, keys, currentKeyIndex, terminalKey, value) {
-		if (keys[currentKeyIndex] === terminalKey) {
-			obj[terminalKey] = value;
-			return;
-		} else {
-			if (!obj.hasOwnProperty(keys[currentKeyIndex]))
-				obj[keys[currentKeyIndex]] = {};
+	function addPropToResult(container, key, value) {
+		let keys = key.split('.');
+		let currentKey = keys[0];
 
-			addProp(obj[keys[currentKeyIndex]], keys, currentKeyIndex + 1, terminalKey, value);
+		if(keys.length === 1) container[currentKey] = value; else {
+			if(!container.hasOwnProperty(currentKey)) container[currentKey] = {};
+			addPropToResult(container[currentKey], keys.slice(1).join('.'), value);
 		}
 	}
 
-
-	function isProp(key) {
-		return key.split('.').length === 1;
-	}
-
-	function isPropWithScope(key) {
-		return key.split('.').length > 1;
-	}
-
 	return result;
-
 };
 
 /*
