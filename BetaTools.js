@@ -8,6 +8,7 @@
 // [-] flattenObject
 // [-] invert
 // [-] isArray
+// [-] removeDuplicates
 // [-] unflattenObject
 // [-] without
 // [_] intersection <<<<<<
@@ -108,7 +109,7 @@ module.exports = ß = {};
 	}
 
 	function recFlatten(scope, key, value) {
-		var newScope = scope === '' ? key : `${scope}.${key}`;
+		let newScope = scope === '' ? key : `${scope}.${key}`;
 
 		if(typeof value === 'object' && !Array.isArray(value)) {
 			Object.keys(value).forEach( currentKey => {
@@ -123,11 +124,20 @@ module.exports = ß = {};
 	return result;
 };
 
-// This is flawed
-ß.intersection = function intersection(array) {
-	let toIntersectWith = ß.flatten(Array.from(arguments).slice(1));
-	return array.filter( elem => ~toIntersectWith.indexOf(elem));
+/*
+* Returns an array of values that is present in each of the passed in ararys
+*/
+ß.intersection = function intersection() {
+	let arrays = Array.from(arguments); // This is one way of converting array like object to array here
+
+	function isPresentInAll(val) {
+		for(let i = 0; i < arrays.length; i++ ) if(!~arrays[i].indexOf(val)) return false;
+		return true;
+	}
+
+	return ß.removeDuplicates(arrays[0]).filter( value => isPresentInAll(value));
 };
+
 
 /*
 * Inverts an object - where in all the keys become values and all the values become keys.
@@ -150,6 +160,14 @@ module.exports = ß = {};
 */
 ß.isArray = Array.isArray || function(a) {
 	return Object.prototype.toString.call(a) === '[object Array]';
+};
+
+/*
+* Removes duplicates from the passed in array.
+* ---- Don't know how well this works alright ---
+*/
+ß.removeDuplicates = function removeDuplicates(arr) {
+	return [...new Set(arr)];
 };
 
 /*
@@ -187,7 +205,7 @@ module.exports = ß = {};
 	};
 */
 ß.unflattenObject = function unFlattenObject(toUnflatten) {
-	var result = {};
+	let result = {};
 
 	if(Object.prototype.toString.call(toUnflatten) === '[object Object]') {
 		Object.keys(toUnflatten).forEach( key => {
