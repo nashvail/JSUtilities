@@ -3,6 +3,7 @@
 // ------------------------------------------------------------
 // Finished Features - [_](To Begin) [-](In Progress) [x](Done)
 // ------------------------------------------------------------
+// [_] contains (for both objects and arrays)
 // [-] differnce
 // [-] flatten (Array)
 // [-] flattenObject
@@ -10,10 +11,24 @@
 // [-] isArray
 // [-] removeDuplicates
 // [-] unflattenObject
+// [-] values
 // [-] without
-// [_] intersection <<<<<<
+// [-] intersection
 
 module.exports = ß = {};
+
+
+// [WIP]
+ß.contains = function contains(obj, item) {
+	// The passed in thing could be an array or a regular object alright? 
+	let type = Object.prototype.toString.call(obj);
+	console.log(type);
+	if(type === '[object Object]') {
+		return obj.hasOwnProperty(value);
+	} else if(type === '[object Array]') {
+		return !!~obj.indexOf(value);
+	}
+};
 
 /*
 * Similar to without except returns the value from array that are not present in 
@@ -128,16 +143,14 @@ module.exports = ß = {};
 * Returns an array of values that is present in each of the passed in ararys
 */
 ß.intersection = function intersection() {
-	let arrays = Array.from(arguments); // This is one way of converting array like object to array here
+	let arrays = Array.from(arguments); // or you can use [].slice.call(arguments) to get an Array
+	return ß.removeDuplicates(arrays[0]).filter( value => isPresentInAll(value));
 
 	function isPresentInAll(val) {
-		for(let i = 0; i < arrays.length; i++ ) if(!~arrays[i].indexOf(val)) return false;
+		for(let i = 0, length = arrays.length; i < length; i++ ) if(!~arrays[i].indexOf(val)) return false;
 		return true;
 	}
-
-	return ß.removeDuplicates(arrays[0]).filter( value => isPresentInAll(value));
 };
-
 
 /*
 * Inverts an object - where in all the keys become values and all the values become keys.
@@ -226,6 +239,19 @@ module.exports = ß = {};
 	}
 
 	return result;
+};
+
+/*
+* Returns the values in an object wrapped in an array
+*/
+ß.values = function values(obj) {
+	let keys = Object.keys(obj);
+	let length = keys.length;
+	let values = Array(length); // Array() constructor is 2x fast in major browswers than []
+	for(let i = 0; i < length; i++) 
+		values[i] = obj[keys[i]];
+
+	return values;
 };
 
 /*
