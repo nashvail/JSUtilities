@@ -5,10 +5,12 @@
 // ------------------------------------------------------------
 // [_] contains (for both objects and arrays)
 // [-] differnce
+// [_] extend
 // [-] flatten (Array)
 // [-] flattenObject
 // [-] invert
 // [-] isArray
+// [-] range
 // [-] removeDuplicates
 // [-] unflattenObject
 // [-] values
@@ -174,6 +176,29 @@ module.exports = ß = {};
 ß.isArray = Array.isArray || function(a) {
 	return Object.prototype.toString.call(a) === '[object Array]';
 };
+
+/*
+* Generates an integer array containing arithmetic progression.
+*/
+ß.range = function range(start, stop, step) {
+	if(stop == null) {
+		stop = start || 0;
+		start = 0;
+	}
+	
+	if(!step) {
+		step = stop < start ? -1 : 1;
+	}
+	
+	var length = Math.max(Math.ceil((stop - start) / step), 0); // This is just some nice math here
+	var range = Array(length);
+	for(var idx = 0; idx < length; idx++, start += step) {
+		range[idx] = start;
+	}
+	
+	return range;
+		
+}
 
 /*
 * Removes duplicates from the passed in array.
